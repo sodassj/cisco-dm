@@ -1,15 +1,33 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Cargar el navbar
-    fetch('./components/navbar.html')
-        .then(response => response.text())
-        .then(data => {
-            document.body.insertAdjacentHTML('afterbegin', data);
-            initializeNavbar();
-            initializeMobileMenu();
-            initializeSearchModal();
-            addDynamicStyles();
-        })
-        .catch(error => console.error('Error loading navbar:', error));
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('../components/navbar.html')
+    .then(res => {
+      if (!res.ok) throw new Error('No se pudo cargar navbar');
+      return res.text();
+    })
+    .then(html => {
+      document.getElementById('navbar').innerHTML = html;
+
+      initializeMobileMenu();
+      showAMPSubmenuIfNeeded(); 
+      initializeSearchModal();
+      initializeAMPSubmenu();
+      addDynamicStyles();
+    })
+    .catch(err => console.error(err));
+
+// CARGA DEL FOOTER
+  fetch('../components/footer.html')
+    .then(res => {
+      if (!res.ok) throw new Error('No se pudo cargar el footer');
+      return res.text();
+    })
+    .then(html => {
+      const footerContainer = document.getElementById('footer-container');
+      if (footerContainer) {
+        footerContainer.innerHTML = html;
+      }
+    })
+    .catch(err => console.error('Error al cargar footer:', err));
 });
 
 function initializeNavbar() {
@@ -68,6 +86,41 @@ function initializeMobileMenu() {
             icon.classList.add('fa-bars');
         }
     }
+}
+
+function initializeAMPSubmenu() {
+    const toggle = document.getElementById('submenu-toggle');
+    const menu = document.getElementById('submenu-mobile');
+    const icon = document.getElementById('submenu-icon');
+
+    if (!toggle || !menu) {
+        console.log('Submenu AMP no encontrado en esta página');
+        return;
+    }
+
+    console.log('Submenu AMP inicializado correctamente');
+
+    toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        menu.classList.toggle('hidden');
+        if (icon) {
+            icon.classList.toggle('rotate-180');
+        }
+    });
+}
+
+function showAMPSubmenuIfNeeded() {
+  const section = document.body.dataset.section;
+  const submenu = document.getElementById('submenu-amp');
+
+  if (!submenu) return;
+
+  if (section === 'amp') {
+    submenu.classList.remove('hidden');
+    console.log('✅ Submenu AMP visible');
+  } else {
+    submenu.classList.add('hidden');
+  }
 }
 
 function initializeSearchModal() {
