@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  fetch('/components/navbar.html')
+  fetch('../components/navbar.html')
     .then(res => {
       if (!res.ok) throw new Error('No se pudo cargar navbar');
       return res.text();
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(err => console.error(err));
 
 // CARGA DEL FOOTER
-  fetch('/components/footer.html')
+  fetch('../components/footer.html')
     .then(res => {
       if (!res.ok) throw new Error('No se pudo cargar el footer');
       return res.text();
